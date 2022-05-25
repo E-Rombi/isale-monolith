@@ -1,0 +1,28 @@
+spring:
+  flyway:
+    password: password
+    url: jdbc:postgresql://localhost:5433/isaledb
+    user: postgres
+  datasource:
+    url: ${URL_DATABASE:jdbc:postgresql://localhost:5433/isaledb}
+    username: postgres
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+  main:
+    allow-circular-references: true
+
+#keycloak:
+#  realm: demo
+#  auth-server-url: http://localhost:18080/auth
+#  ssl-required: external
+#  resource: enviroment
+#  credentials:
+#    secret: wFmLHUPbGyUWiDTAkO5IdVxvLkCyivZE
+#  use-resource-role-mappings: true
+#  bearer-only: true
