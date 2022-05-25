@@ -14,7 +14,8 @@ internal class ProductTest {
             Product(
                 Description(""),
                 Price(BigDecimal.TEN),
-                Stock(BigDecimal.ZERO)
+                Stock(BigDecimal.ZERO),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustNotBeBlank("description"), ex.message)
@@ -26,7 +27,8 @@ internal class ProductTest {
             Product(
                 Description("123456789"),
                 Price(BigDecimal.TEN),
-                Stock(BigDecimal.ZERO)
+                Stock(BigDecimal.ZERO),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustBeBetween("description", 10, 200), ex.message)
@@ -42,7 +44,8 @@ internal class ProductTest {
                         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                         "a"),
                 Price(BigDecimal.TEN),
-                Stock(BigDecimal.ZERO)
+                Stock(BigDecimal.ZERO),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustBeBetween("description", 10, 200), ex.message)
@@ -54,7 +57,8 @@ internal class ProductTest {
             Product(
                 Description("Sacola Plástica"),
                 Price(BigDecimal.ZERO),
-                Stock(BigDecimal.ZERO)
+                Stock(BigDecimal.ZERO),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustBeGreaterThan("price"), ex.message)
@@ -66,7 +70,8 @@ internal class ProductTest {
             Product(
                 Description("Sacola Plástica"),
                 Price(BigDecimal.valueOf(-15)),
-                Stock(BigDecimal.ZERO)
+                Stock(BigDecimal.ZERO),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustBeGreaterThan("price"), ex.message)
@@ -78,7 +83,8 @@ internal class ProductTest {
             Product(
                 Description("Sacola Plástica"),
                 Price(BigDecimal.TEN),
-                Stock(BigDecimal.valueOf(-1))
+                Stock(BigDecimal.valueOf(-1)),
+                Company("Company One").apply { id = 1 }
             )
         }
         assertEquals(Messages.mustBeGreaterOrEquals("stock"), ex.message)
@@ -89,7 +95,8 @@ internal class ProductTest {
         val product = Product(
             Description("Sacola Plástica"),
             Price(BigDecimal.TEN),
-            Stock(BigDecimal.ZERO)
+            Stock(BigDecimal.ZERO),
+            Company("Company One").apply { id = 1 }
         )
 
         assertNotNull(product.toString())

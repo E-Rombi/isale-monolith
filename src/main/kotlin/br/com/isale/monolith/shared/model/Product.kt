@@ -9,12 +9,14 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.ManyToOne
 
 @Entity
 class Product(
     @field:Embedded var description: Description,
     @field:Embedded var price: Price,
-    @field:Embedded var stock: Stock
+    @field:Embedded var stock: Stock,
+    @field:ManyToOne var company: Company
 ) {
 
     @Id

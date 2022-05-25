@@ -4,5 +4,5 @@ import br.com.isale.monolith.shared.model.Product
 
 interface RegisterProductPort {
 
-    fun register(product: Product): Product
+    fun execute(product: Product): Product
 }

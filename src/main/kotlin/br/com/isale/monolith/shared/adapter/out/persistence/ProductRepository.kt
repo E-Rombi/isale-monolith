@@ -9,5 +9,5 @@ class ProductRepository(
     val productRepositorySpringData: ProductRepositorySpringData
 ) : RegisterProductPort {
 
-    override fun register(product: Product): Product = productRepositorySpringData.save(product)
+    override fun execute(product: Product): Product = productRepositorySpringData.save(product)
 }
