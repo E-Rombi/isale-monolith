@@ -1,4 +1,4 @@
-package br.com.isale.monolith.stock.newProduct.adapter.out.persistence
+package br.com.isale.monolith.shared.adapter.out.persistence
 
 import br.com.isale.monolith.stock.newProduct.application.port.out.RegisterProductPort
 import br.com.isale.monolith.shared.model.Product
