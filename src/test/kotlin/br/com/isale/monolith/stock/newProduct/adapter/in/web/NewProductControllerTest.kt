@@ -1,10 +1,10 @@
 package br.com.isale.monolith.stock.newProduct.adapter.`in`.web
 
-import br.com.isale.monolith.shared.application.port.out.FindCompanyByIdPort
+import br.com.isale.monolith.shared.adapter.out.persistence.CompanyRepositorySpringData
+import br.com.isale.monolith.shared.adapter.out.persistence.ProductRepositorySpringData
 import br.com.isale.monolith.shared.model.*
 import br.com.isale.monolith.shared.model.exception.Messages
 import br.com.isale.monolith.shared.model.exception.ResourceNotFoundException
-import br.com.isale.monolith.stock.newProduct.application.port.out.RegisterProductPort
 import br.com.isale.monolith.stock.newProduct.model.NewProductRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -32,10 +31,10 @@ internal class NewProductControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @MockBean
-    private lateinit var findCompanyByIdPort: FindCompanyByIdPort
+    private lateinit var companyRepositorySpringData: CompanyRepositorySpringData
 
-    @SpyBean
-    private lateinit var registerProductPort: RegisterProductPort
+    @MockBean
+    private lateinit var productRepositorySpringData: ProductRepositorySpringData
 
     private val validCompany = Company("Company One").apply { id = 1 }
 
@@ -47,8 +46,8 @@ internal class NewProductControllerTest {
 
         val requestBody = NewProductRequest("Sacola Plástica", BigDecimal.TEN, BigDecimal.ZERO, 1)
 
-        doReturn(validCompany) .`when`(findCompanyByIdPort).execute(anyLong())
-        doReturn(validProduct).`when`(registerProductPort).execute(validProduct)
+        doReturn(Optional.of(validCompany)) .`when`(companyRepositorySpringData).findById(anyLong())
+        doReturn(validProduct).`when`(productRepositorySpringData).save(any(Product::class.java))
 
         mockMvc.perform(
             post("/products")
@@ -60,14 +59,16 @@ internal class NewProductControllerTest {
             .andExpect(
                 jsonPath("$.description").value(requestBody.description)
             )
+
+        verify(productRepositorySpringData, times(1)).save(any(Product::class.java))
     }
 
     @Test
     fun `should return BAD_REQUEST when description length is less than 10`() {
         val requestBody = NewProductRequest("123456789", BigDecimal.TEN, BigDecimal.ZERO, 1)
 
-        `when`(findCompanyByIdPort.execute(anyLong()))
-            .thenReturn(validCompany)
+        `when`(companyRepositorySpringData.findById(anyLong()))
+            .thenReturn(Optional.of(validCompany))
 
         mockMvc.perform(
             post("/products")
@@ -90,8 +91,8 @@ internal class NewProductControllerTest {
                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                     "a", BigDecimal.TEN, BigDecimal.ZERO, 1)
 
-        `when`(findCompanyByIdPort.execute(anyLong()))
-            .thenReturn(validCompany)
+        `when`(companyRepositorySpringData.findById(anyLong()))
+            .thenReturn(Optional.of(validCompany))
 
         mockMvc.perform(
             post("/products")
@@ -110,8 +111,8 @@ internal class NewProductControllerTest {
         val requestBody = NewProductRequest(
             "Sacola Plástica", BigDecimal.ZERO, BigDecimal.ZERO, 1)
 
-        `when`(findCompanyByIdPort.execute(anyLong()))
-            .thenReturn(validCompany)
+        `when`(companyRepositorySpringData.findById(anyLong()))
+            .thenReturn(Optional.of(validCompany))
 
         mockMvc.perform(
             post("/products")
@@ -131,8 +132,8 @@ internal class NewProductControllerTest {
             "Sacola Plástica", BigDecimal.TEN, BigDecimal.valueOf(-15), 1
         )
 
-        `when`(findCompanyByIdPort.execute(anyLong()))
-            .thenReturn(validCompany)
+        `when`(companyRepositorySpringData.findById(anyLong()))
+            .thenReturn(Optional.of(validCompany))
 
         mockMvc.perform(
             post("/products")
@@ -152,7 +153,7 @@ internal class NewProductControllerTest {
             "Sacola Plástica", BigDecimal.TEN, BigDecimal.ZERO, 2
         )
 
-        `when`(findCompanyByIdPort.execute(anyLong()))
+        `when`(companyRepositorySpringData.findById(anyLong()))
             .thenThrow(ResourceNotFoundException(Messages.resourceNotFound("company")))
 
         mockMvc.perform(
